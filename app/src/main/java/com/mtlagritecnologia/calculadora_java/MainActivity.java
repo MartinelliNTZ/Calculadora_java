@@ -24,9 +24,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         linkage();
 
+        btn0.setOnClickListener(this);
+
 
     }
-    private void linkage(){
+
+    private void linkage() {
         // TextViews
         txtExpressao = findViewById(R.id.txtExpressao);
         txtResultado = findViewById(R.id.txtResultado);
@@ -54,14 +57,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnIgual = findViewById(R.id.btnIgual);
     }
 
-    public void acrescentarExpressao(String string, boolean limpar_dados){
-        if(txtResultado.getText().equals("")){
+    public void acrescentarExpressao(String string, boolean limpar_dados) {
+        if (txtResultado.getText().equals("")) {
             txtExpressao.setText("");
         }
-        if(limpar_dados){
+        if (limpar_dados) {
             txtResultado.setText("");
             txtExpressao.append(string);
-        }else{
+        } else {
             txtExpressao.append(txtResultado.getText());
             txtExpressao.append(string);
             txtResultado.setText("");
@@ -70,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn0:
+                acrescentarExpressao("0",true);
+                break;
+        }
 
     }
 }
