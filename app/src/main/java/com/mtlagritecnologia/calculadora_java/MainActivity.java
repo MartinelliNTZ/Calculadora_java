@@ -2,9 +2,13 @@ package com.mtlagritecnologia.calculadora_java;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // TextViews
@@ -23,9 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         linkage();
-
-
-
 
 
     }
@@ -78,35 +79,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnApagar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            TextView expressao = findViewById(R.id.txtExpressao);
-            String string = expressao.getText().toString();
-            if(!string.isEmpty()){
-                byte var0 = 0;
-                int var1 = string.length()-1;
-                String txtExpressao = string.substring(var0,var1);
-                expressao.setText(txtExpressao);
-            }
-            txtResultado.setText("");
+                TextView expressao = findViewById(R.id.txtExpressao);
+                String string = expressao.getText().toString();
+                if (!string.isEmpty()) {
+                    byte var0 = 0;
+                    int var1 = string.length() - 1;
+                    String newExpressao = string.substring(var0, var1);
+                    expressao.setText(newExpressao);
+                }
+                txtResultado.setText(" ");
             }
         });
         btnLimpar.setOnClickListener(v -> {
-            txtResultado.setText("");
-            txtExpressao.setText("");
+            txtResultado.setText(" ");
+            txtExpressao.setText(" ");
+        });
+        btnIgual.setOnClickListener(v -> {
+            try {
+                //responsavelk pelos calculos bibioteca importada
+                Expression expression = new ExpressionBuilder(txtExpressao.getText().toString()).build();
+                double resultado = expression.evaluate();
+                long longResult = (long) resultado;
+                if (resultado == (double) longResult) {
+                    txtResultado.setText((CharSequence) String.valueOf(longResult));
+                } else {
+                    txtResultado.setText((CharSequence) String.valueOf(resultado));
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                txtResultado.setText("Erro");
+            }
         });
 
     }
 
     public void acrescentarExpressao(String string, boolean limpar_dados) {
         if (txtResultado.getText().equals("")) {
-            txtExpressao.setText("");
+            txtExpressao.setText(" ");
         }
         if (limpar_dados) {
-            txtResultado.setText("");
+            txtResultado.setText(" ");
             txtExpressao.append(string);
         } else {
             txtExpressao.append(txtResultado.getText());
             txtExpressao.append(string);
-            txtResultado.setText("");
+            txtResultado.setText(" ");
         }
     }
 
@@ -158,20 +175,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnDividir:
                 acrescentarExpressao("/", false);
-                break;
-
-            case R.id.btnLimpar:
-                txtExpressao.setText(""); // limpa a expressão
-                txtResultado.setText(""); // limpa o resultado
-                break;
-            case R.id.btnApagar:
-                String expressao = txtExpressao.getText().toString();
-                if (!expressao.isEmpty()) {
-                    txtExpressao.setText(expressao.substring(0, expressao.length() - 1)); // remove o último caractere
-                }
-                break;
-            case R.id.btnIgual:
-                // Aqui você colocaria sua lógica de cálculo, ex: calcularExpressao();
                 break;
         }
 
